@@ -1,35 +1,19 @@
-// Main script for canvas drawing interaction.
-
-document.getElementById('corVerdeNeon').addEventListener('click', function() {
-    changeDrawingColor('#39FF14');
-});
-
-document.getElementById('corPinkNeon').addEventListener('click', function() {
-    changeDrawingColor('#FF00FF');
-});
-
-document.getElementById('corAzulNeon').addEventListener('click', function() {
-    changeDrawingColor('#0000FF');
-});
-
-document.getElementById('corLaranjaNeon').addEventListener('click', function() {
-    changeDrawingColor('#FFA500');
-});
-
-
 // Canvas setup
 const canvas = document.getElementById('meuCanvas');
-canvas.width = 800; // Define a largura do canvas
-canvas.height = 800; // Define a altura do canvas
+canvas.width = 500; // Define a largura do canvas
+canvas.height = 500; // Define a altura do canvas
 const ctx = canvas.getContext('2d');
 let currentColor = '#39FF14';
 
 // Drawing styles
 const lineThickness = 7;
 const pointRadius = 5;
-const fontSize = '15px Arial'; // Altere este valor para ajustar o tamanho do texto
+const fontSize = '9px Arial'; // Altere este valor para ajustar o tamanho do texto
 const gridColor = '#E8E8E8';
-const gridSpacing = 80;
+const gridSpacing = 50; // Ajuste o espaçamento da grade para se adequar ao novo tamanho do canvas
+
+let drawActions = []; // Armazena todas as ações de desenho
+
 // Setup stroke style
 function setupStroke(color) {
     ctx.strokeStyle = color;
@@ -53,12 +37,14 @@ function drawLine(startX, startY, endX, endY) {
     ctx.moveTo(startX, startY);
     ctx.lineTo(endX, endY);
     ctx.stroke();
+    drawActions.push({ type: 'line', startX, startY, endX, endY, color: currentColor }); // Armazena a ação de desenho
 }
 
 function drawPoint(centerX, centerY) {
     startPath();
     ctx.arc(centerX, centerY, pointRadius, 0, Math.PI * 2, true);
     ctx.fill();
+    drawActions.push({ type: 'point', centerX, centerY, color: currentColor }); // Armazena a ação de desenho
 }
 
 function drawGrid(spacing) {
@@ -87,6 +73,34 @@ function drawGridSize() {
     ctx.fillText(sizeText, canvas.width / 2, canvas.height - 10);
 }
 
+function undoLastAction() {
+    if (drawActions.length === 0) return; // Verifica se há ações para desfazer
+
+    drawActions.pop(); // Remove a última ação
+    clearCanvas(false); // Limpa o canvas sem resetar as ações
+
+    drawActions.forEach(action => {
+        ctx.globalCompositeOperation = 'source-over'; // Garante o modo correto de composição
+        if (action.type === 'line') {
+            setupStroke(action.color);
+            drawLine(action.startX, action.startY, action.endX, action.endY);
+        } else if (action.type === 'point') {
+            setupFill(action.color); // Garante que o preenchimento seja feito com a cor correta
+            drawPoint(action.centerX, action.centerY);
+        }
+    });
+
+
+}
+
+function clearCanvas(resetActions = true) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (resetActions) {
+        setupCanvas();
+        drawActions = [];
+    }
+}
+
 // Interaction setup
 function setupCanvasInteraction() {
     let isDrawing = false;
@@ -112,12 +126,6 @@ function changeDrawingColor(newColor) {
     currentColor = newColor;
 }
 
-// Clear the canvas
-function clearCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    setupCanvas();
-}
-
 // Initial setup
 function setupCanvas() {
     setupStroke(gridColor);
@@ -130,7 +138,29 @@ setupCanvas();
 setupCanvasInteraction();
 
 // Event listener for the clear button
-document.getElementById('limparCanvas').addEventListener('click', clearCanvas);
+document.getElementById('limparCanvas').addEventListener('click', clearCanvas); // Verifique se os IDs dos botões estão corretos
+document.getElementById('corVerdeNeon').addEventListener('click', function() {
+    changeDrawingColor('#39FF14');
+});
 
+document.getElementById('corPinkNeon').addEventListener('click', function() {
+    changeDrawingColor('#FF00FF');
+});
+
+document.getElementById('corAzulNeon').addEventListener('click', function() {
+    changeDrawingColor('#0000FF');
+});
+
+document.getElementById('corLaranjaNeon').addEventListener('click', function() {
+    changeDrawingColor('#FFA500');
+});
+
+// Verifique se o ID do botão está correto
+document.getElementById('limparCanvas').addEventListener('click', function() {
+    clearCanvas();
+});
+
+// Event listener para o botão de desfazer
+document.getElementById('desfazerAcao').addEventListener('click', undoLastAction);
 // Event listener for the clear button
 document.getElementById('limparCanvas').addEventListener('click', clearCanvas);

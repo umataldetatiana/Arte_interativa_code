@@ -92,6 +92,39 @@ function changeColor(newColor) {
     currentColor = newColor;
 }
 
+/**
+ * Desenha os rótulos da grade com as coordenadas de cada quadrado.
+ *
+ * @param {number} spacing - O espaçamento entre as linhas da grade. Se não for fornecido, o padrão será 50.
+ * @param {string} color - A cor do texto. Se não for fornecido, o padrão será preto.
+ */
+function drawGridLabels(spacing = 50, color = 'black') {
+    ctx.font = '10px Arial'; // Define o tamanho e a fonte do texto
+    ctx.fillStyle = color; // Define a cor do texto
+    ctx.textAlign = 'center'; // Centraliza o texto
+    for (let x = 0; x <= canvas.width; x += spacing) {
+        for (let y = 0; y <= canvas.height; y += spacing) {
+            ctx.fillText(`(${x}, ${y})`, x + spacing / 2, y + spacing / 2 - 10); // Desenha o texto das coordenadas
+            ctx.fillText(`${spacing}x${spacing}`, x + spacing / 2, y + spacing / 2 + 10); // Desenha o texto do tamanho do quadrado
+        }
+    }
+}
+
+/**
+ * Desenha o tamanho total da grade fora do grid.
+ *
+ * @param {string} color - A cor do texto. Se não for fornecido, o padrão será preto.
+ */
+function drawGridSize(color = 'black') {
+    ctx.font = '14px Arial'; // Define o tamanho e a fonte do texto
+    ctx.fillStyle = color; // Define a cor do texto
+    ctx.textAlign = 'center'; // Centraliza o texto
+    const text = `Tamanho: ${canvas.width} x ${canvas.height}`;
+    ctx.fillText(text, canvas.width / 2, canvas.height - 10); // Desenha o texto do tamanho
+}
+
 // Inicializa a grade e configura a interatividade
 initGrid(); // Inicializa a grade
+drawGridLabels(); // Desenha os rótulos da grade
+// drawGridSize(); // Desenha o tamanho total da grade - linha comentada
 setupInteraction(); // Configura interatividade

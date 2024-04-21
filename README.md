@@ -35,10 +35,10 @@ To contribute:
 4. Push to the branch (`git push origin new-feature`).
 5. Open a Pull Request.
 
-License:
+## License:
 This project is open source and was created based on a study of generative art, creative coding, and natural computing by the author Tatiana Barros. 
 
-Contact:
+## Contact:
 Questions and feedback are welcome. 
 Feel free to reach out via email at coluninja@gmail.com. 
 If you’re interested in writing articles about using this project, please mention the author, Tatiana Barros.

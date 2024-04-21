@@ -10,29 +10,63 @@ const ctx = canvas.getContext('2d');
 let currentColor = 'red'; // Cor inicial
 
 /**
+ * Configura o estilo de linha.
+ *
+ * @param {string} color - A cor da linha.
+ */
+function setStrokeStyle(color) {
+    ctx.strokeStyle = color;
+}
+
+/**
+ * Configura o estilo de preenchimento.
+ *
+ * @param {string} color - A cor do preenchimento.
+ */
+function setFillStyle(color) {
+    ctx.fillStyle = color;
+}
+
+/**
+ * Inicia um novo caminho no contexto do canvas.
+ */
+function beginPath() {
+    ctx.beginPath();
+}
+
+/**
  * Desenha uma linha entre dois pontos.
  *
  * @param {number} x1 - A coordenada x do ponto inicial.
  * @param {number} y1 - A coordenada y do ponto inicial.
  * @param {number} x2 - A coordenada x do ponto final.
  * @param {number} y2 - A coordenada y do ponto final.
- * @param {string} color - A cor da linha. Se não for fornecida, a cor atual será usada.
  */
-function drawLine(x1, y1, x2, y2, color = currentColor) {
-    ctx.strokeStyle = color;
-    ctx.beginPath();
+function drawLine(x1, y1, x2, y2) {
+    beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
     ctx.stroke();
 }
 
 /**
- * Inicializa o quadro com linhas de grade.
+ * Desenha um ponto em uma posição específica.
  *
- * @param {number} spacing - O espaçamento entre as linhas da grade. Se não for fornecido, o padrão será 50.
+ * @param {number} x - A coordenada x do ponto.
+ * @param {number} y - A coordenada y do ponto.
  */
-function initGrid(spacing = 50) {
-    ctx.strokeStyle = '#E8E8E8'; // Cor suave para a grade
+function drawPoint(x, y) {
+    beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2, true);
+    ctx.fill();
+}
+
+/**
+ * Desenha uma linha de grade.
+ *
+ * @param {number} spacing - O espaçamento entre as linhas da grade.
+ */
+function drawGridLine(spacing) {
     for (let x = 0; x <= canvas.width; x += spacing) {
         drawLine(x, 0, x, canvas.height);
     }
@@ -42,17 +76,13 @@ function initGrid(spacing = 50) {
 }
 
 /**
- * Desenha um ponto em uma posição específica.
+ * Inicializa o quadro com linhas de grade.
  *
- * @param {number} x - A coordenada x do ponto.
- * @param {number} y - A coordenada y do ponto.
- * @param {string} color - A cor do ponto. Se não for fornecida, a cor atual será usada.
+ * @param {number} spacing - O espaçamento entre as linhas da grade. Se não for fornecido, o padrão será 50.
  */
-function drawPoint(x, y, color = currentColor) {
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(x, y, 5, 0, Math.PI * 2, true);
-    ctx.fill();
+function initGrid(spacing = 50) {
+    setStrokeStyle('#E8E8E8'); // Cor suave para a grade
+    drawGridLine(spacing);
 }
 
 /**
@@ -100,7 +130,7 @@ function changeColor(newColor) {
  */
 function drawGridLabels(spacing = 50, color = 'black') {
     ctx.font = '10px Arial'; // Define o tamanho e a fonte do texto
-    ctx.fillStyle = color; // Define a cor do texto
+    setFillStyle(color); // Define a cor do texto
     ctx.textAlign = 'center'; // Centraliza o texto
     for (let x = 0; x <= canvas.width; x += spacing) {
         for (let y = 0; y <= canvas.height; y += spacing) {
@@ -117,7 +147,7 @@ function drawGridLabels(spacing = 50, color = 'black') {
  */
 function drawGridSize(color = 'black') {
     ctx.font = '14px Arial'; // Define o tamanho e a fonte do texto
-    ctx.fillStyle = color; // Define a cor do texto
+    setFillStyle(color); // Define a cor do texto
     ctx.textAlign = 'center'; // Centraliza o texto
     const text = `Tamanho: ${canvas.width} x ${canvas.height}`;
     ctx.fillText(text, canvas.width / 2, canvas.height - 10); // Desenha o texto do tamanho

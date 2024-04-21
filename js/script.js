@@ -19,16 +19,17 @@ document.getElementById('corLaranjaNeon').addEventListener('click', function() {
 
 // Canvas setup
 const canvas = document.getElementById('meuCanvas');
+canvas.width = 800; // Define a largura do canvas
+canvas.height = 800; // Define a altura do canvas
 const ctx = canvas.getContext('2d');
 let currentColor = '#39FF14';
 
 // Drawing styles
 const lineThickness = 7;
 const pointRadius = 5;
-const fontSize = '10px Arial';
+const fontSize = '15px Arial'; // Altere este valor para ajustar o tamanho do texto
 const gridColor = '#E8E8E8';
-const gridSpacing = 50;
-
+const gridSpacing = 80;
 // Setup stroke style
 function setupStroke(color) {
     ctx.strokeStyle = color;
@@ -127,6 +128,9 @@ function setupCanvas() {
 
 setupCanvas();
 setupCanvasInteraction();
+
+// Event listener for the clear button
+document.getElementById('limparCanvas').addEventListener('click', clearCanvas);
 
 // Event listener for the clear button
 document.getElementById('limparCanvas').addEventListener('click', clearCanvas);

@@ -1,5 +1,22 @@
 // Main script for canvas drawing interaction.
 
+document.getElementById('corVerdeNeon').addEventListener('click', function() {
+    changeDrawingColor('#39FF14');
+});
+
+document.getElementById('corPinkNeon').addEventListener('click', function() {
+    changeDrawingColor('#FF00FF');
+});
+
+document.getElementById('corAzulNeon').addEventListener('click', function() {
+    changeDrawingColor('#0000FF');
+});
+
+document.getElementById('corLaranjaNeon').addEventListener('click', function() {
+    changeDrawingColor('#FFA500');
+});
+
+
 // Canvas setup
 const canvas = document.getElementById('meuCanvas');
 const ctx = canvas.getContext('2d');

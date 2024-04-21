@@ -1,12 +1,16 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<!DOCTYPE html> <!-- DOCTYPE declaration to define this document as an HTML5 document -->
+<html lang="pt-br"> <!-- The HTML element with a language attribute set to Brazilian Portuguese -->
 <head>
-    <meta charset="UTF-8">
-    <title>Canvas Espaço</title>
-    <link rel="stylesheet" type="text/css" href="css/styte.css">
+    <meta charset="UTF-8"> <!-- Meta element defining the character set to UTF-8 -->
+    <title>Canvas Espaço</title> <!-- The title of the document seen in the browser tab -->
+    <link rel="stylesheet" type="text/css" href="css/styte.css"> <!--scriptto an external stylesheet -->
 </head>
 <body>
-    <canvas id="meuCanvas" width="800" height="600">Seu navegador não suporta o elemento canvas.</canvas>
-    <script src="js/script.js"></script>
+    <div id="container"> <!-- Container div for the canvas and control elements -->
+        <canvas id="meuCanvas" width="800" height="600"></canvas> <!-- The canvas element where graphics are drawn -->
+        <p id="instrucoes">Pressione o mouse e desenhe</p> <!-- Paragraph element with instructions for the user -->
+        <button id="limparCanvas">Limpar Desenho</button> <!-- Button to clear the canvas -->
+    </div>
+    <script src="js/script.js"></script> <!-- External script link to the JavaScript file -->
 </body>
 </html>

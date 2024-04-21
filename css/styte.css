@@ -1,8 +1,59 @@
+/* Style for the body element */
+
+body {
+    margin: 0;
+    /* Removes the default margin */
+    padding: 10px;
+    /* Adds a padding of 10px in all directions */
+    width: 100%;
+    /* Sets the width to occupy the entire viewport width */
+    height: 100%;
+    /* Sets the height to occupy the entire viewport height */
+    display: flex;
+    /* Sets the body as a flex container */
+    justify-content: center;
+    /* Centers items horizontally */
+    align-items: center;
+    /* Centers items vertically */
+    box-sizing: border-box;
+    /* Includes padding and border in the box size calculation */
+    overflow: hidden;
+    /* Hides any content that overflows the body size */
+}
+
+
+/* Style for the element with id 'container' */
+
+#container {
+    display: flex;
+    /* Sets the container as a flex container */
+    flex-direction: column;
+    /* Arranges items in a column */
+    align-items: center;
+    /* Centers items horizontally */
+    justify-content: center;
+    /* Centers items vertically */
+    box-sizing: border-box;
+    /* Includes padding and border in the box size calculation */
+    margin-top: 120px;
+    /* Moves the entire container 120px below its original position */
+}
+
+
+/* Style for the element with id 'meuCanvas' */
+
 #meuCanvas {
     border: 1px solid black;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin: 10px;
+    /* Adds a black border */
+}
+
+
+/* Style for the elements with id 'instrucoes' and 'limparCanvas' */
+
+#instrucoes,
+#limparCanvas {
+    text-align: center;
+    /* Centers the text */
+    margin-top: 10px;
+    /* Adds a top margin */
 }

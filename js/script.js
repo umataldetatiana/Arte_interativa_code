@@ -1,160 +1,115 @@
-/**
- * Este script é usado para desenhar em um elemento canvas HTML.
- */
+// Main script for canvas drawing interaction.
 
-// Obtém o elemento canvas do DOM e o contexto de desenho
+// Canvas setup
 const canvas = document.getElementById('meuCanvas');
 const ctx = canvas.getContext('2d');
+let currentColor = '#39FF14';
 
-// Define a cor atual para desenho
-let currentColor = 'red'; // Cor inicial
+// Drawing styles
+const lineThickness = 7;
+const pointRadius = 5;
+const fontSize = '10px Arial';
+const gridColor = '#E8E8E8';
+const gridSpacing = 50;
 
-/**
- * Configura o estilo de linha.
- *
- * @param {string} color - A cor da linha.
- */
-function setStrokeStyle(color) {
+// Setup stroke style
+function setupStroke(color) {
     ctx.strokeStyle = color;
+    ctx.lineWidth = lineThickness;
 }
 
-/**
- * Configura o estilo de preenchimento.
- *
- * @param {string} color - A cor do preenchimento.
- */
-function setFillStyle(color) {
+// Setup fill style
+function setupFill(color) {
     ctx.fillStyle = color;
+    ctx.font = fontSize;
 }
 
-/**
- * Inicia um novo caminho no contexto do canvas.
- */
-function beginPath() {
+// Begin drawing path
+function startPath() {
     ctx.beginPath();
 }
 
-/**
- * Desenha uma linha entre dois pontos.
- *
- * @param {number} x1 - A coordenada x do ponto inicial.
- * @param {number} y1 - A coordenada y do ponto inicial.
- * @param {number} x2 - A coordenada x do ponto final.
- * @param {number} y2 - A coordenada y do ponto final.
- */
-function drawLine(x1, y1, x2, y2) {
-    beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
+// Drawing functions
+function drawLine(startX, startY, endX, endY) {
+    startPath();
+    ctx.moveTo(startX, startY);
+    ctx.lineTo(endX, endY);
     ctx.stroke();
 }
 
-/**
- * Desenha um ponto em uma posição específica.
- *
- * @param {number} x - A coordenada x do ponto.
- * @param {number} y - A coordenada y do ponto.
- */
-function drawPoint(x, y) {
-    beginPath();
-    ctx.arc(x, y, 5, 0, Math.PI * 2, true);
+function drawPoint(centerX, centerY) {
+    startPath();
+    ctx.arc(centerX, centerY, pointRadius, 0, Math.PI * 2, true);
     ctx.fill();
 }
 
-/**
- * Desenha uma linha de grade.
- *
- * @param {number} spacing - O espaçamento entre as linhas da grade.
- */
-function drawGridLine(spacing) {
+function drawGrid(spacing) {
     for (let x = 0; x <= canvas.width; x += spacing) {
-        drawLine(x, 0, x, canvas.height);
-    }
-    for (let y = 0; y <= canvas.height; y += spacing) {
-        drawLine(0, y, canvas.width, y);
-    }
-}
-
-/**
- * Inicializa o quadro com linhas de grade.
- *
- * @param {number} spacing - O espaçamento entre as linhas da grade. Se não for fornecido, o padrão será 50.
- */
-function initGrid(spacing = 50) {
-    setStrokeStyle('#E8E8E8'); // Cor suave para a grade
-    drawGridLine(spacing);
-}
-
-/**
- * Configura a interatividade do mouse com o canvas.
- * Quando o botão do mouse é pressionado, começa a desenhar.
- * Quando o botão do mouse é solto, para de desenhar.
- * Quando o mouse se move, desenha uma linha para a nova posição do mouse.
- */
-function setupInteraction() {
-    let isDrawing = false;
-    let lastX = 0;
-    let lastY = 0;
-    canvas.addEventListener('mousedown', (e) => {
-        isDrawing = true;
-        lastX = e.offsetX;
-        lastY = e.offsetY;
-        drawPoint(lastX, lastY); // Desenha um ponto inicial
-    });
-    canvas.addEventListener('mousemove', (e) => {
-        if (isDrawing) {
-            drawLine(lastX, lastY, e.offsetX, e.offsetY);
-            lastX = e.offsetX;
-            lastY = e.offsetY;
+        for (let y = 0; y <= canvas.height; y += spacing) {
+            drawLine(x, 0, x, canvas.height);
+            drawLine(0, y, canvas.width, y);
         }
-    });
-    canvas.addEventListener('mouseup', () => {
-        isDrawing = false;
-    });
+    }
 }
 
-/**
- * Muda a cor atual para desenho.
- *
- * @param {string} newColor - A nova cor para desenho.
- */
-function changeColor(newColor) {
+function drawLabels(spacing) {
+    ctx.textAlign = 'center';
+    for (let x = 0; x <= canvas.width; x += spacing) {
+        for (let y = 0; y <= canvas.height; y += spacing) {
+            const coordinates = `(${x}, ${y})`;
+            const size = `${spacing}x${spacing}`;
+            ctx.fillText(coordinates, x + spacing / 2, y + spacing / 2 - 10);
+            ctx.fillText(size, x + spacing / 2, y + spacing / 2 + 10);
+        }
+    }
+}
+
+function drawGridSize() {
+    const sizeText = `Tamanho: ${canvas.width} x ${canvas.height}`;
+    ctx.fillText(sizeText, canvas.width / 2, canvas.height - 10);
+}
+
+// Interaction setup
+function setupCanvasInteraction() {
+    let isDrawing = false;
+    let [lastX, lastY] = [0, 0];
+
+    canvas.onmousedown = (e) => {
+        [isDrawing, lastX, lastY] = [true, e.offsetX, e.offsetY];
+        setupStroke(currentColor);
+        drawPoint(lastX, lastY);
+    };
+
+    canvas.onmousemove = (e) => {
+        if (!isDrawing) return;
+        drawLine(lastX, lastY, e.offsetX, e.offsetY);
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+    };
+
+    canvas.onmouseup = () => isDrawing = false;
+}
+
+// Change the drawing color
+function changeDrawingColor(newColor) {
     currentColor = newColor;
 }
 
-/**
- * Desenha os rótulos da grade com as coordenadas de cada quadrado.
- *
- * @param {number} spacing - O espaçamento entre as linhas da grade. Se não for fornecido, o padrão será 50.
- * @param {string} color - A cor do texto. Se não for fornecido, o padrão será preto.
- */
-function drawGridLabels(spacing = 50, color = 'black') {
-    ctx.font = '10px Arial'; // Define o tamanho e a fonte do texto
-    setFillStyle(color); // Define a cor do texto
-    ctx.textAlign = 'center'; // Centraliza o texto
-    for (let x = 0; x <= canvas.width; x += spacing) {
-        for (let y = 0; y <= canvas.height; y += spacing) {
-            ctx.fillText(`(${x}, ${y})`, x + spacing / 2, y + spacing / 2 - 10); // Desenha o texto das coordenadas
-            ctx.fillText(`${spacing}x${spacing}`, x + spacing / 2, y + spacing / 2 + 10); // Desenha o texto do tamanho do quadrado
-        }
-    }
+// Clear the canvas
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    setupCanvas();
 }
 
-/**
- * Desenha o tamanho total da grade fora do grid.
- *
- * @param {string} color - A cor do texto. Se não for fornecido, o padrão será preto.
- */
-function drawGridSize(color = 'black') {
-    ctx.font = '14px Arial'; // Define o tamanho e a fonte do texto
-    setFillStyle(color); // Define a cor do texto
-    ctx.textAlign = 'center'; // Centraliza o texto
-    const text = `Tamanho: ${canvas.width} x ${canvas.height}`;
-    ctx.fillText(text, canvas.width / 2, canvas.height - 10); // Desenha o texto do tamanho
+// Initial setup
+function setupCanvas() {
+    setupStroke(gridColor);
+    drawGrid(gridSpacing);
+    setupFill('black');
+    drawLabels(gridSpacing);
 }
 
-// Inicializa a grade e configura a interatividade
-initGrid(); // Inicializa a grade
-drawGridLabels(); // Desenha os rótulos da grade
-// drawGridSize(); // Desenha o tamanho total da grade - linha comentada
-setupInteraction(); // Configura interatividade
+setupCanvas();
+setupCanvasInteraction();
+
+// Event listener for the clear button
+document.getElementById('limparCanvas').addEventListener('click', clearCanvas);
